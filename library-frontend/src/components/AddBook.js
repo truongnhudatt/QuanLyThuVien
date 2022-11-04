@@ -13,7 +13,7 @@ const AddBook = () => {
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(null);
-  const [btnEdit, setBtnEdit] = useState(true)
+  const [btnEdit, setBtnEdit] = useState(false)
   const navigate = useNavigate();
   const { id } = useParams();
   var data = new FormData();
@@ -26,9 +26,6 @@ const AddBook = () => {
     data.append("dateRelease",dateRelease)
     data.append("totalPage",totalPage)
     data.append("file",file)
-    // const booktmp = {title,author,typeBook,description,dateRelease,totalPage}
-    // console.log(booktmp)
-    // console.log(data.get("title"))
     if (id) {
       BookService.updateBook(id, data)
         .then((response) => {
@@ -87,10 +84,10 @@ const AddBook = () => {
 
   const handleEventButton = (e) => {
       // 
-      // setBtnEdit(true)
-      // e.target.innerHTML = "Save"
+      setBtnEdit(true)
+      e.target.innerHTML = "Save"
       // if(e.target.innerHTML==="Save"){
-        saveBook(e)
+        // saveBook(e)
       // }
   }
 
@@ -247,7 +244,7 @@ const AddBook = () => {
                     }
                 </div>
                 <div className="button-add" style={{display:"flex"}}>
-                  <Button style={{display:"block",marginLeft: "auto", marginRight:"auto",width: "50%"}} id='save' className="btn btn-success" onClick={(e) => handleEventButton(e)} value={id}>{id ? "Sửa sách" : "Thêm sách"} </Button>
+                  <Button style={{display:"block",marginLeft: "auto", marginRight:"auto",width: "50%"}} id='save' className="btn btn-success" onClick={!btnEdit ? (e) => handleEventButton(e) : (e) => saveBook(e)} value={id}>{id ? "Sửa sách" : "Thêm sách"} </Button>
                   <Link style={{display:"block",marginLeft: "auto", marginRight:"auto",width: "50%"}} to="/" id="cancel" className="btn btn-danger">
                     Hủy
                   </Link>

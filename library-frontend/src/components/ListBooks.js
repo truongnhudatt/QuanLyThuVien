@@ -1,13 +1,16 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect,useRef} from 'react'
 import BookService from '../Services/BookService.js'
 import {Link} from 'react-router-dom'
 import Header from './Header'
 import CTable from "react-bootstrap/Table";
-// import { Button } from 'react-bootstrap';
+import Dialog from './Dialog.js';
 const ListBooks = () => {
-
+    const [dialog, setDialog] = useState({
+        message: "",
+        isLoading: false,
+        nameProduct: ""
+      });
     const [books, setBooks] = useState([])
-
     useEffect(() => {
         getAllBooks();
     }, []);
@@ -29,11 +32,31 @@ const ListBooks = () => {
         })
     }
 
+    const idProductRef = useRef();
+    const handleDialog = (message, isLoading, nameProduct) => {
+        setDialog({
+          message,
+          isLoading,
+          nameProduct
+        });
+      };
+      const handleDelete = (id) => {
+        handleDialog("Xác nhận xóa bookID", true, id);
+        idProductRef.current = id
+      };
+      const areUSureDelete = (choose) => {
+        if (choose) {
+          handleDialog("", false);
+            deleteBook(idProductRef.current)
+        } else {
+          handleDialog("", false);
+        }
+      };
     return (
         <>
         <Header/>
         <div className='container'>
-            <h2 className='text-center'>List Books</h2>
+            <h2 className='text-center'>Danh sách Sách có trong Thư Viện</h2>
             {
                 localStorage.getItem("user-info") ?
                 <>
@@ -48,7 +71,7 @@ const ListBooks = () => {
                     bordered
                     borderColor="primary"
                     hover
-                    tableHeadProps={{ color: "light" }}
+                    tableHeadProps={{ color: "dark" }}
                 >
                     <thead>
                     <tr>
@@ -74,10 +97,17 @@ const ListBooks = () => {
                         <th className="text-center" scope="col">
                         Ảnh bìa
                         </th>
-                        <th className="text-center" scope="col">
-                        Hành động
-                        </th>
-                        
+                        {
+                            localStorage.getItem("user-info") ?
+                            <>
+                                <th className="text-center" scope="col">
+                                    Hành động
+                                </th>
+                            </>
+                            :
+                            <>
+                            </>
+                        }                        
                     </tr>
                     </thead>
                     <tbody>
@@ -96,28 +126,43 @@ const ListBooks = () => {
                                 <td style={{ textAlign: "center", justifyContent: "center" }} className="text-center">
                                 <img src={`data:image;base64,${data.base64Img}`} alt="" width="100" height="100" />
                                 </td>
-                                <td className="text-center">
-                                    <div className="d-flex p-1">
-                                        <Link to={`/book-details/${data.id}`}
-                                        style={{ padding: "15px 25px" }}
-                                        className="btn btn-primary m-1"
-                                        >
-                                        View
-                                        </Link>
-                                        <button onClick={() => deleteBook(data.id)}
-                                        style={{ padding: "15px 25px" }}
-                                        className="btn btn-primary m-1"
-                                        >
-                                        Delete
-                                        </button>
-                                    </div>
-                                </td>
+                                {
+                                    localStorage.getItem("user-info") ?
+                                    <>
+                                        <td className="text-center">
+                                            <div className="d-flex p-1">
+                                                <Link to={`/book-details/${data.id}`}
+                                                style={{ padding: "15px 25px" }}
+                                                className="btn btn-primary m-1"
+                                                >
+                                                View
+                                                </Link>
+                                                <button onClick={() => handleDelete(data.id)}
+                                                style={{ padding: "15px 25px" }}
+                                                className="btn btn-primary m-1"
+                                                >
+                                                Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </>
+                                    :
+                                    <>
+                                    </>
+                                }
                             </tr>
                             )
                         )
                         )}
                     </tbody>
                 </CTable>
+                {dialog.isLoading && (
+                    <Dialog
+                    nameProduct={dialog.nameProduct}
+                    onDialog={areUSureDelete}
+                    message={dialog.message}
+                    />
+                )}
         </div>
         </>
     )
