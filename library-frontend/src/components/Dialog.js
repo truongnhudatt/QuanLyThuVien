@@ -1,4 +1,4 @@
-function Dialog({ message, onDialog, nameProduct }) {
+function Dialog({ message, onDialog, id, title }) {
     return (
       <div
         style={{
@@ -28,31 +28,32 @@ function Dialog({ message, onDialog, nameProduct }) {
           }}
         >
           <h3 stlye={{ color: "#111", fontSize: "16px" }}>{message}</h3>
-          <h1 style={{ color: "blue", fontSize: "24px" }}>{nameProduct}</h1>
+          <h1 style={{ color: "blue", fontSize: "24px" }}>{title}</h1>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <button
+            <button className="btn btn-success"
               onClick={() => onDialog(true)}
-              style={{
-                background: "red",
-                color: "white",
-                padding: "10px",
-                marginRight: "4px",
-                border: "none",
-                cursor: "pointer"
-              }}
+              // style={{
+              //   background: "red",
+              //   color: "white",
+              //   padding: "10px",
+              //   marginRight: "4px",
+              //   border: "none",
+              //   cursor: "pointer"
+              // }}
             >
               Yes
             </button>
-            <button
+            <button className="btn btn-danger"
               onClick={() => onDialog(false)}
-              style={{
-                background: "green",
-                color: "white",
-                padding: "10px",
-                marginLeft: "4px",
-                border: "none",
-                cursor: "pointer"
-              }}
+              // style={{
+              //   background: "green",
+              //   color: "white",
+              //   padding: "10px",
+              //   marginLeft: "4px",
+              //   border: "none",
+              //   cursor: "pointer"
+              // }}
+              
             >
               No
             </button>

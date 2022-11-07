@@ -1,50 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from '../Services/UserService.js'
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (localStorage.getItem("user-info")) {
-      navigate("/books");
-    }
-  });
-
-  const getAllUsers = () => {
-    UserService.getAllUsers()
+  function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate();
+  
+    const checkLogin = e => {
+      e.preventDefault();
+      const userLogin = {email, password}
+      UserService.login(userLogin)
       .then((response) => {
-        const users = response.data;
-        users.map((user) => {
-          if(user.email === email && user.password === password){
-            localStorage.setItem("user-info", JSON.stringify(user));
-          }
-        })
-        if(localStorage.getItem("user-info")){
-          navigate("/books");
-        }
-        else {
-          return false;
-        }
+        console.log(response)
+        const statusResponse = response.data
+        navigate("/books");
+        localStorage.setItem("user-info", JSON.stringify(statusResponse.data));
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+        const errorMessage = error.response.data
+        setMessage(errorMessage.message)
+      })
 
-  function checkUser() {
-    if(email !== "" && password !== ""){
-      getAllUsers();
-      setError("Email hoặc mật khẩu không chính xác")
     }
-    else {
-      setError("Vui lòng điền đầy đủ các trường")
-    }
-  }
-
   return (
     <div id="signup-page" className="col-sm-6 offset-sm-3">
       <h1>Đăng nhập</h1>
@@ -55,6 +35,7 @@ function Login() {
         }}
         className="form-control"
         placeholder="email"
+        required
       />
       <br />
       <input
@@ -64,14 +45,16 @@ function Login() {
         }}
         className="form-control"
         placeholder="password"
+        required
       />
       <br />
-      <p>{error}</p>
-      <button className="btn btn-primary" onClick={(e) => checkUser(e)}>
+      <p>{message}</p>
+      <button className="btn btn-primary" disabled={(email.length > 0 && password.length > 0) ? false : true} onClick={e => checkLogin(e)}>
         Đăng nhập
       </button>
     </div>
   );
+// }
 }
 
-export default Login;
+export default Login

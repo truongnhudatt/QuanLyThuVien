@@ -1,20 +1,22 @@
 import axios from "axios";
 
-const USER_BASE_REST_API_URL = "http://localhost:8080/api/v1/"
 
 class UserService {
     getAllUsers() {
-        return axios.get(USER_BASE_REST_API_URL +"users");
+        return axios.get("http://localhost:8080/api/v1/users");
     }
 
     createUser(user){
-        return axios.post(USER_BASE_REST_API_URL+"user/save", user);
+        return axios.post("http://localhost:8080/api/v1/user/save", user);
     }
 
     getUserById(userId){
-        return axios.get(USER_BASE_REST_API_URL +"/"+ userId);
+        return axios.get("http://localhost:8080/api/v1/"+ userId);
     }
 
+    login(user){
+        return axios.post("http://localhost:8080/api/v1/login", user);
+    }
 }
 
 export default new UserService();

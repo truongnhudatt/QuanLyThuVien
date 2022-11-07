@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import UserService from "../Services/UserService";
 import { useNavigate } from "react-router-dom";
 
@@ -10,35 +10,36 @@ function SignUp() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (localStorage.getItem("user-info")) {
-      navigate("/books");
-    }
-  });
-
-  const saveUser = (e) => {
-    e.preventDefault();
-    if (username !== "" && email !== "" && password !== "" && confirm !== "") {
-      if (password === confirm) {
-        const user = { username, email, password };
-
+    const saveUser = e => {
+      e.preventDefault();
+      if(password === confirm){
+        const user = {username,email,password}
+        // console.log(user)
         UserService.createUser(user)
           .then((response) => {
+            console.log(response.status)
+            const statusResponse = response.data
             navigate("/books");
+            localStorage.setItem("user-info", JSON.stringify(statusResponse.data));
           })
           .catch((error) => {
-            console.log(error);
+            console.log(error)
+            const errorMessage = error.response.data
+            console.log(errorMessage)
+            if(errorMessage.message === "Email này đã được sử dụng"){
+              setMessage(errorMessage.message)
+            }
+            else{
+              const log = errorMessage.errors[0].defaultMessage
+              if(log === "size must be between 8 and 2147483647")
+              setMessage("Mật khẩu yêu cầu 8 kí tự")
+            }
           });
-        localStorage.setItem("user-info", JSON.stringify(user));
       }
-      else {
-        setMessage("Xác nhận mật khẩu không giống nhau");
+      else{
+        setMessage("Xác nhận mật khẩu không khớp")
       }
-    } else {
-      setMessage("Vui lòng nhập đủ các trường");
     }
-  };
-
   return (
     <div id="signup-page" className="col-sm-6 offset-sm-3">
       <h1>Đăng ký</h1>

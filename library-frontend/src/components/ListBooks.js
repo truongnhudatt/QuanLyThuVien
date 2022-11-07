@@ -33,15 +33,16 @@ const ListBooks = () => {
     }
 
     const idProductRef = useRef();
-    const handleDialog = (message, isLoading, nameProduct) => {
+    const handleDialog = (message, isLoading, id,title) => {
         setDialog({
           message,
           isLoading,
-          nameProduct
+          id,
+          title
         });
       };
-      const handleDelete = (id) => {
-        handleDialog("Xác nhận xóa bookID", true, id);
+      const handleDelete = (id, title) => {
+        handleDialog("Xác nhận xóa ", true, id,title);
         idProductRef.current = id
       };
       const areUSureDelete = (choose) => {
@@ -137,7 +138,7 @@ const ListBooks = () => {
                                                 >
                                                 View
                                                 </Link>
-                                                <button onClick={() => handleDelete(data.id)}
+                                                <button onClick={() => handleDelete(data.id,data.title)}
                                                 style={{ padding: "15px 25px" }}
                                                 className="btn btn-primary m-1"
                                                 >
@@ -158,7 +159,7 @@ const ListBooks = () => {
                 </CTable>
                 {dialog.isLoading && (
                     <Dialog
-                    nameProduct={dialog.nameProduct}
+                    title={dialog.title}
                     onDialog={areUSureDelete}
                     message={dialog.message}
                     />

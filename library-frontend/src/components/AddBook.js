@@ -29,7 +29,7 @@ const AddBook = () => {
     if (id) {
       BookService.updateBook(id, data)
         .then((response) => {
-          navigate("/books");
+          navigate("/");
         })
         .catch((error) => {
           data.delete("title")
@@ -44,7 +44,8 @@ const AddBook = () => {
     } else {
       BookService.createBook(data)
         .then((response) => {
-          navigate("/books");
+          navigate("/");
+          setTimeout(alert('Lưu thông tin sách thành công'), 2000);
         })
         .catch((error) => {
           data.delete("title")
@@ -86,9 +87,6 @@ const AddBook = () => {
       // 
       setBtnEdit(true)
       e.target.innerHTML = "Save"
-      // if(e.target.innerHTML==="Save"){
-        // saveBook(e)
-      // }
   }
 
   const changeHandler = (e) => {
@@ -230,7 +228,7 @@ const AddBook = () => {
                     onChange={e => changeHandler(e)}
                   />
                   <br/>
-                    {fileDataURL ?
+                    {/* {fileDataURL ?
                     <p className="img-preview-wrapper">
                       {
                         <img src={fileDataURL} alt="preview" style={{display:"block",marginLeft: "auto", marginRight:"auto",width: "50%"}}/>
@@ -241,6 +239,19 @@ const AddBook = () => {
                       <img src={`data:image;base64,${bookIMG}`} alt="preview" style={{display:"block",marginLeft: "auto", marginRight:"auto",width: "50%"}}/>
                     }
                     </p>
+                    } */}
+
+                    {id ? (fileDataURL ?
+                    <p className="img-preview-wrapper">
+                      {
+                        <img src={fileDataURL} alt="preview" style={{display:"block",marginLeft: "auto", marginRight:"auto",width: "50%"}}/>
+                      }
+                    </p> :
+                    <p className="img-preview-wrapper">
+                    {
+                      <img src={`data:image;base64,${bookIMG}`} alt="preview" style={{display:"block",marginLeft: "auto", marginRight:"auto",width: "50%"}}/>
+                    }
+                    </p>) : (<></>)
                     }
                 </div>
                 <div className="button-add" style={{display:"flex"}}>
