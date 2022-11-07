@@ -14,5 +14,7 @@ public interface UserService {
 	List<User> findAll();
 
 	<S extends User> S save(S entity);
+
+	boolean existsByEmail(String email);
 	
 }

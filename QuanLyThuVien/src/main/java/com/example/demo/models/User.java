@@ -1,7 +1,9 @@
 package com.example.demo.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import lombok.*;
@@ -15,12 +17,17 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = false)
+	@NotBlank
 	private String username;
 	
+	@NotBlank
+	@Email
 	@Column(nullable = false, unique = true)
 	private String email;
 
+	
+	@NotBlank
 	@Column(nullable = false, unique = false)
 	@Size(min = 8)
 	private String password;
